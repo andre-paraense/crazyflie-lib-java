@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 /**
  * Control mode where the height is sent as an absolute
  * setpoint (intended to be the distance to the surface
- * under the Crazflie).
+ * under the Crazyflie).
  */
 public class HoverPacket extends CrtpPacket {
     private final float mVx;

@@ -88,7 +88,12 @@ public class FlowSequenceExample {
 
     public void sendDirections() throws InterruptedException {
 
-        //TODO: reset kalman estimator
+        //reset kalman estimator
+    	
+    	this.mCrazyflie.getParam().setValue("kalman.resetEstimation", 1);
+    	Thread.sleep(100);
+    	this.mCrazyflie.getParam().setValue("kalman.resetEstimation", 0);
+    	Thread.sleep(2000);
 
         // ascend
         for (float y = 0; y < mHeight; y += (float) mHeight/10) {
