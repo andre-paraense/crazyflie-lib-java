@@ -1,9 +1,12 @@
 package se.bitcraze.crazyflie.lib.positioning;
 
+import java.time.Instant;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import se.bitcraze.crazyflie.lib.crazyflie.Crazyflie;
+import se.bitcraze.crazyflie.lib.crtp.HoverPacket;
+import se.bitcraze.crazyflie.lib.crtp.StopPacket;
 
 public class MotionCommander {
 
@@ -76,7 +79,7 @@ public class MotionCommander {
 	}
 
 	public void down(float height, float velocity) throws Exception {
-		move_distance(0.0f, 0.0f, -height, velocity);
+		moveDistance(0.0f, 0.0f, -height, velocity);
 	}
 
   public void up(float height, float velocity) throws Exception {
@@ -125,12 +128,12 @@ public class MotionCommander {
 		stop();
 	}
 
-	public void circleLeft(float radius){
+	public void circleLeft(float radius) throws Exception{
 		circleLeft(radius, velocity, angle);
 	}
 
-	public void circleLeft(float radius, float velocity, float angle){
-		float distance = 2.0f * radius * Math.PI * angle / 360.0f;
+	public void circleLeft(float radius, float velocity, float angle) throws Exception{
+		float distance = (float) (2.0f * radius * Math.PI * angle / 360.0f);
     float flightTime = distance / velocity;
 
     startCircleLeft(radius, velocity);
@@ -142,8 +145,8 @@ public class MotionCommander {
 		stop();
 	}
 
-	public void circleRight(float radius, float velocity, float angle){
-		float distance = 2.0f * radius * Math.PI * angle / 360.0f;
+	public void circleRight(float radius, float velocity, float angle) throws Exception{
+		float distance = (float) (2.0f * radius * Math.PI * angle / 360.0f);
     float flightTime = distance / velocity;
 
     startCircleRight(radius, velocity);
@@ -176,51 +179,51 @@ public class MotionCommander {
 		stop();
 	}
 
-	public void startLeft(){
+	public void startLeft() throws Exception{
 		startLeft(velocity);
 	}
 
-	public void startLeft(float velocity){
+	public void startLeft(float velocity) throws Exception{
 		startLinearMotion(0.0f, velocity, 0.0f);
 	}
 
-	public void startRight(){
+	public void startRight() throws Exception{
 		startRight(velocity);
 	}
 
-	public void startRight(float velocity){
+	public void startRight(float velocity) throws Exception{
 		startLinearMotion(0.0f, -velocity, 0.0f);
 	}
 
-	public void startForward(){
+	public void startForward() throws Exception{
 		startForward(velocity);
 	}
 
-	public void startForward(float velocity){
+	public void startForward(float velocity) throws Exception{
 		startLinearMotion(velocity, 0.0f, 0.0f);
 	}
 
-	public void startBack(){
+	public void startBack() throws Exception{
 		startBack(velocity);
 	}
 
-	public void startBack(float velocity){
+	public void startBack(float velocity) throws Exception{
 		startLinearMotion(-velocity, 0.0f, 0.0f);
 	}
 
-	public void startUp(){
+	public void startUp() throws Exception{
 		startUp(velocity);
 	}
 
-	public void startUp(floar velocity){
+	public void startUp(float velocity) throws Exception{
 		startLinearMotion(0.0f, 0.0f, velocity);
 	}
 
-	public void startDown(){
+	public void startDown() throws Exception{
 		startDown(velocity);
 	}
 
-	public void startDown(float velocity){
+	public void startDown(float velocity) throws Exception{
 		startLinearMotion(0.0f, 0.0f, -velocity);
 	}
 
@@ -228,23 +231,23 @@ public class MotionCommander {
     setVelocitySetpoint(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
-	public void startCircleLeft(float radius, float velocity){
-		float circumference = 2.0f * radius * Math.PI;
+	public void startCircleLeft(float radius, float velocity) throws Exception{
+		float circumference = (float) (2.0f * radius * Math.PI);
     float rate = 360.0f * velocity / circumference;
 		setVelocitySetpoint(velocity, 0.0f, 0.0f, -rate);
 	}
 
-	public void startCircleRight(float radius, float velocity){
-		float circumference = 2.0f * radius * Math.PI;
+	public void startCircleRight(float radius, float velocity) throws Exception{
+		float circumference = (float) (2.0f * radius * Math.PI);
 		float rate = 360.0f * velocity / circumference;
 		setVelocitySetpoint(velocity, 0.0f, 0.0f, rate);
 	}
 
-	public void startTurnLeft(float rate){
+	public void startTurnLeft(float rate) throws Exception{
 		setVelocitySetpoint(0.0f, 0.0f, 0.0f, -rate);
 	}
 
-	public void startTurnRight(float rate){
+	public void startTurnRight(float rate) throws Exception{
 		setVelocitySetpoint(0.0f, 0.0f, 0.0f, rate);
 	}
 
@@ -282,7 +285,7 @@ public class MotionCommander {
     private float[] hoverSetpoint = {0.0f, 0.0f, 0.0f, 0.0f};
     private float zBase = 0.0f;
     private float zVelocity = 0.0f;
-    private long zBaseTime = 0.0L;
+    private long zBaseTime = 0L;
     private LinkedBlockingQueue<QueueEvent> queue = new LinkedBlockingQueue<>();
 
     public SetPointThread(Crazyflie crazyflie) {
@@ -294,7 +297,11 @@ public class MotionCommander {
 		}
 
 		public void stop(){
-			queue.put(new QueueEvent(true));
+			try {
+				queue.put(new QueueEvent(true));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		public float getHeight(){
@@ -325,7 +332,10 @@ public class MotionCommander {
 			zVelocity = queueEvent.getVelocityZ();
 			zBaseTime = Instant.now().getEpochSecond();
 
-			hoverSetpoint = {queueEvent.getVelocityX(), queueEvent.getVelocityY(), queueEvent.getRateYaw(), zBase};
+			hoverSetpoint[0] = queueEvent.getVelocityX();
+			hoverSetpoint[1] = queueEvent.getVelocityY();
+			hoverSetpoint[2] = queueEvent.getRateYaw();
+			hoverSetpoint[3] = zBase;
 		}
 
 		private float currentZ(){
@@ -339,7 +349,7 @@ public class MotionCommander {
 		}
 	}
 
-  private class QueueEvent{
+  class QueueEvent{
 
     private float velocityX = 0.0f;
     private float velocityY = 0.0f;
