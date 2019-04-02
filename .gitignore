@@ -27,6 +27,28 @@ hs_err_pid*
 .project
 /logCache/
 /paramCache/
-.idea/
 .gradle/
 .settings/
+gradlew
+gradlew.bat
+**/gradle-wrapper.jar
+
+# Miscellaneous
+*.lock
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Visual Studio Code related
+.vscode/
+/build/
