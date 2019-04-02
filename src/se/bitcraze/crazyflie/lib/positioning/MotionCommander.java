@@ -58,8 +58,32 @@ public class MotionCommander {
   	takeOff();
   }
 
-  public void up(float distance, float velocity) throws Exception {
-    moveDistance(0.0f, 0.0f, distance, velocity);
+	public void land() throws Exception {
+		if(isFlying) {
+    	down(setPointThread.getHeight(), velocity);
+			setPointThread.stop();
+			crazyflie.sendPacket(new StopPacket());
+			try {
+					Thread.sleep(1000);
+			} catch (InterruptedException ie) {
+					ie.printStackTrace();
+			}
+			crazyflie.disconnect();
+			isFlying = false;
+    }
+	}
+
+	public void land(float velocity) throws Exception {
+		this.velocity = velocity;
+		land();
+	}
+
+	public void down(float height, float velocity) throws Exception {
+		move_distance(0.0, 0.0, -height, velocity);
+	}
+
+  public void up(float height, float velocity) throws Exception {
+    moveDistance(0.0f, 0.0f, height, velocity);
   }
 
   public void moveDistance(float distanceX, float distanceY, float distanceZ, float velocity) throws Exception{
