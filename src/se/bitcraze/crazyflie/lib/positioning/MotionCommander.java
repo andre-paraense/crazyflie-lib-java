@@ -11,6 +11,7 @@ public class MotionCommander {
   private float velocity = 0.2f;
   private float height = 0.3f;
   private float rate = 360.0f/5.0f;
+	private float angle = 360.0f;
   private boolean isFlying = false;
   private SetPointThread setPointThread;
 
@@ -28,7 +29,15 @@ public class MotionCommander {
   }
 
   public void takeOff() throws java.lang.Exception {
-    if(isFlying) {
+		takeOff(height, velocity);
+  }
+
+  public void takeOff(float height) throws java.lang.Exception {
+    takeOff(height, velocity);
+  }
+
+  public void takeOff(float velocity, float height) throws java.lang.Exception {
+		if(isFlying) {
     	throw new java.lang.Exception("Already flying");
     }
 
@@ -47,18 +56,11 @@ public class MotionCommander {
     up(height, velocity);
   }
 
-  public void takeOff(float height) throws java.lang.Exception {
-    this.height = height;
-    takeOff();
-  }
-
-  public void takeOff(float velocity, float height) throws java.lang.Exception {
-    this.velocity = velocity;
-    this.height = height;
-  	takeOff();
-  }
-
 	public void land() throws Exception {
+		land(velocity);
+	}
+
+	public void land(float velocity) throws Exception {
 		if(isFlying) {
     	down(setPointThread.getHeight(), velocity);
 			setPointThread.stop();
@@ -73,18 +75,85 @@ public class MotionCommander {
     }
 	}
 
-	public void land(float velocity) throws Exception {
-		this.velocity = velocity;
-		land();
-	}
-
 	public void down(float height, float velocity) throws Exception {
-		move_distance(0.0, 0.0, -height, velocity);
+		move_distance(0.0f, 0.0f, -height, velocity);
 	}
 
   public void up(float height, float velocity) throws Exception {
     moveDistance(0.0f, 0.0f, height, velocity);
   }
+
+	public void left(float distance, float velocity) throws Exception {
+		moveDistance(0.0f, distance, 0.0f, velocity);
+	}
+
+	public void right(float distance, float velocity) throws Exception {
+		moveDistance(0.0f, -distance, 0.0f, velocity);
+	}
+
+	public void forward(float distance, float velocity) throws Exception {
+		moveDistance(distance, 0.0f, 0.0f, velocity);
+	}
+
+	public void back(float distance, float velocity) throws Exception {
+		moveDistance(-distance, 0.0f, 0.0f, velocity);
+	}
+
+	public void turnLeft(float angle)  throws Exception {
+		turnLeft(angle, rate);
+	}
+
+	public void turnLeft(float angle, float rate)  throws Exception {
+		float flightTime = angle/rate;
+		startTurnLeft(rate);
+		try {
+			Thread.sleep((long) (flightTime*1000));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		stop();
+	}
+
+	public void turnRight(float angle, float rate)  throws Exception {
+		float flightTime = angle / rate;
+		startTurnRight(rate);
+		try {
+			Thread.sleep((long) (flightTime*1000));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		stop();
+	}
+
+	public void circleLeft(float radius){
+		circleLeft(radius, velocity, angle);
+	}
+
+	public void circleLeft(float radius, float velocity, float angle){
+		float distance = 2.0f * radius * Math.PI * angle / 360.0f;
+    float flightTime = distance / velocity;
+
+    startCircleLeft(radius, velocity);
+		try {
+			Thread.sleep((long) (flightTime*1000));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		stop();
+	}
+
+	public void circleRight(float radius, float velocity, float angle){
+		float distance = 2.0f * radius * Math.PI * angle / 360.0f;
+    float flightTime = distance / velocity;
+
+    startCircleRight(radius, velocity);
+		try {
+			Thread.sleep((long) (flightTime*1000));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		stop();
+	}
 
   public void moveDistance(float distanceX, float distanceY, float distanceZ, float velocity) throws Exception{
     float distance = (float) Math.sqrt(distanceX * distanceX +
@@ -107,8 +176,76 @@ public class MotionCommander {
 		stop();
 	}
 
+	public void startLeft(){
+		startLeft(velocity);
+	}
+
+	public void startLeft(float velocity){
+		startLinearMotion(0.0f, velocity, 0.0f);
+	}
+
+	public void startRight(){
+		startRight(velocity);
+	}
+
+	public void startRight(float velocity){
+		startLinearMotion(0.0f, -velocity, 0.0f);
+	}
+
+	public void startForward(){
+		startForward(velocity);
+	}
+
+	public void startForward(float velocity){
+		startLinearMotion(velocity, 0.0f, 0.0f);
+	}
+
+	public void startBack(){
+		startBack(velocity);
+	}
+
+	public void startBack(float velocity){
+		startLinearMotion(-velocity, 0.0f, 0.0f);
+	}
+
+	public void startUp(){
+		startUp(velocity);
+	}
+
+	public void startUp(floar velocity){
+		startLinearMotion(0.0f, 0.0f, velocity);
+	}
+
+	public void startDown(){
+		startDown(velocity);
+	}
+
+	public void startDown(float velocity){
+		startLinearMotion(0.0f, 0.0f, -velocity);
+	}
+
   public void stop() throws Exception {
     setVelocitySetpoint(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+	public void startCircleLeft(float radius, float velocity){
+		float circumference = 2.0f * radius * Math.PI;
+    float rate = 360.0f * velocity / circumference;
+		setVelocitySetpoint(velocity, 0.0f, 0.0f, -rate);
+	}
+
+	public void startCircleRight(float radius, float velocity){
+		float circumference = 2.0f * radius * Math.PI;
+		float rate = 360.0f * velocity / circumference;
+		setVelocitySetpoint(velocity, 0.0f, 0.0f, rate);
+	}
+
+	public void startTurnLeft(float rate){
+		setVelocitySetpoint(0.0f, 0.0f, 0.0f, -rate);
+	}
+
+	public void startTurnRight(float rate){
+		setVelocitySetpoint(0.0f, 0.0f, 0.0f, rate);
 	}
 
 	public void startLinearMotion(float velocityX, float velocityY, float velocityZ) throws Exception{
@@ -211,7 +348,6 @@ public class MotionCommander {
     private boolean shouldTerminate = false;
 
 		public QueueEvent(float velocityX, float velocityY, float velocityZ, float rateYaw) {
-			super();
 			this.velocityX = velocityX;
 			this.velocityY = velocityY;
 			this.velocityZ = velocityZ;
@@ -219,7 +355,6 @@ public class MotionCommander {
 		}
 
 		public QueueEvent(boolean shouldTerminate) {
-			super();
 			this.shouldTerminate = shouldTerminate;
 		}
 
