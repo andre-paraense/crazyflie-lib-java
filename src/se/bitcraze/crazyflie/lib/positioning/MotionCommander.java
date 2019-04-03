@@ -11,53 +11,53 @@ import se.bitcraze.crazyflie.lib.crtp.StopPacket;
 public class MotionCommander {
 
 	private Crazyflie crazyflie;
-  private float velocity = 0.2f;
-  private float height = 0.3f;
-  private float rate = 360.0f/5.0f;
+	private float velocity = 0.2f;
+	private float height = 0.3f;
+	private float rate = 360.0f/5.0f;
 	private float angle = 360.0f;
-  private boolean isFlying = false;
-  private SetPointThread setPointThread;
+	private boolean isFlying = false;
+	private SetPointThread setPointThread;
 
-  public MotionCommander(Crazyflie crazyflie) {
-    this.crazyflie = crazyflie;
-    isFlying = false;
-    setPointThread = null;
-  }
+	public MotionCommander(Crazyflie crazyflie) {
+		this.crazyflie = crazyflie;
+		isFlying = false;
+		setPointThread = null;
+	}
 
-  public MotionCommander(Crazyflie crazyflie, float height) {
-    this.crazyflie = crazyflie;
-    this.height = height;
-    isFlying = false;
-    setPointThread = null;
-  }
+	public MotionCommander(Crazyflie crazyflie, float height) {
+		this.crazyflie = crazyflie;
+		this.height = height;
+		isFlying = false;
+		setPointThread = null;
+	}
 
-  public void takeOff() throws java.lang.Exception {
+	public void takeOff() throws java.lang.Exception {
 		takeOff(height, velocity);
-  }
+	}
 
-  public void takeOff(float height) throws java.lang.Exception {
-    takeOff(height, velocity);
-  }
+	public void takeOff(float height) throws java.lang.Exception {
+		takeOff(height, velocity);
+	}
 
-  public void takeOff(float velocity, float height) throws java.lang.Exception {
+	public void takeOff(float velocity, float height) throws java.lang.Exception {
 		if(isFlying) {
-    	throw new java.lang.Exception("Already flying");
-    }
+			throw new java.lang.Exception("Already flying");
+		}
 
-    if(!crazyflie.isConnected()) {
-    	throw new java.lang.Exception("Crazyflie is not connected");
-    }
+		if(!crazyflie.isConnected()) {
+			throw new java.lang.Exception("Crazyflie is not connected");
+		}
 
-    isFlying = true;
+		isFlying = true;
 
-    resetPositionEstimator();
+		resetPositionEstimator();
 
-    setPointThread = new SetPointThread(crazyflie);
-    Thread thread = new Thread(setPointThread);
-    thread.start();
+		setPointThread = new SetPointThread(crazyflie);
+		Thread thread = new Thread(setPointThread);
+		thread.start();
 
-    up(height, velocity);
-  }
+		up(height, velocity);
+	}
 
 	public void land() throws Exception {
 		land(velocity);
@@ -65,26 +65,26 @@ public class MotionCommander {
 
 	public void land(float velocity) throws Exception {
 		if(isFlying) {
-    	down(setPointThread.getHeight(), velocity);
+			down(setPointThread.getHeight(), velocity);
 			setPointThread.stop();
 			crazyflie.sendPacket(new StopPacket());
 			try {
-					Thread.sleep(1000);
+				Thread.sleep(1000);
 			} catch (InterruptedException ie) {
-					ie.printStackTrace();
+				ie.printStackTrace();
 			}
 			crazyflie.disconnect();
 			isFlying = false;
-    }
+		}
 	}
 
 	public void down(float height, float velocity) throws Exception {
 		moveDistance(0.0f, 0.0f, -height, velocity);
 	}
 
-  public void up(float height, float velocity) throws Exception {
-    moveDistance(0.0f, 0.0f, height, velocity);
-  }
+	public void up(float height, float velocity) throws Exception {
+		moveDistance(0.0f, 0.0f, height, velocity);
+	}
 
 	public void left(float distance, float velocity) throws Exception {
 		moveDistance(0.0f, distance, 0.0f, velocity);
@@ -134,9 +134,9 @@ public class MotionCommander {
 
 	public void circleLeft(float radius, float velocity, float angle) throws Exception{
 		float distance = (float) (2.0f * radius * Math.PI * angle / 360.0f);
-    float flightTime = distance / velocity;
+		float flightTime = distance / velocity;
 
-    startCircleLeft(radius, velocity);
+		startCircleLeft(radius, velocity);
 		try {
 			Thread.sleep((long) (flightTime*1000));
 		} catch (InterruptedException e) {
@@ -147,9 +147,9 @@ public class MotionCommander {
 
 	public void circleRight(float radius, float velocity, float angle) throws Exception{
 		float distance = (float) (2.0f * radius * Math.PI * angle / 360.0f);
-    float flightTime = distance / velocity;
+		float flightTime = distance / velocity;
 
-    startCircleRight(radius, velocity);
+		startCircleRight(radius, velocity);
 		try {
 			Thread.sleep((long) (flightTime*1000));
 		} catch (InterruptedException e) {
@@ -158,15 +158,15 @@ public class MotionCommander {
 		stop();
 	}
 
-  public void moveDistance(float distanceX, float distanceY, float distanceZ, float velocity) throws Exception{
-    float distance = (float) Math.sqrt(distanceX * distanceX +
-			distanceY * distanceY +
-			distanceZ * distanceZ
-		);
+	public void moveDistance(float distanceX, float distanceY, float distanceZ, float velocity) throws Exception{
+		float distance = (float) Math.sqrt(distanceX * distanceX +
+				distanceY * distanceY +
+				distanceZ * distanceZ
+				);
 
-    float flightTime = distance / velocity;
+		float flightTime = distance / velocity;
 
-    float velocityX = velocity * distanceX / distance;
+		float velocityX = velocity * distanceX / distance;
 		float velocityY = velocity * distanceY / distance;
 		float velocityZ = velocity * distanceZ / distance;
 
@@ -227,13 +227,13 @@ public class MotionCommander {
 		startLinearMotion(0.0f, 0.0f, -velocity);
 	}
 
-  public void stop() throws Exception {
-    setVelocitySetpoint(0.0f, 0.0f, 0.0f, 0.0f);
+	public void stop() throws Exception {
+		setVelocitySetpoint(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
 	public void startCircleLeft(float radius, float velocity) throws Exception{
 		float circumference = (float) (2.0f * radius * Math.PI);
-    float rate = 360.0f * velocity / circumference;
+		float rate = 360.0f * velocity / circumference;
 		setVelocitySetpoint(velocity, 0.0f, 0.0f, -rate);
 	}
 
@@ -263,32 +263,32 @@ public class MotionCommander {
 	}
 
 	public void resetPositionEstimator() {
-    crazyflie.getParam().setValue("kalman.resetEstimation", 1);
-    try {
+		crazyflie.getParam().setValue("kalman.resetEstimation", 1);
+		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-    crazyflie.getParam().setValue("kalman.resetEstimation", 0);
-    try {
+		crazyflie.getParam().setValue("kalman.resetEstimation", 0);
+		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-  }
+	}
 
-  private class SetPointThread implements Runnable{
+	private class SetPointThread implements Runnable{
 
-    private static final long UPDATE_PERIOD = 200L;
-    private static final int ABS_Z_INDEX = 3;
-    private Crazyflie crazyflie;
-    private float[] hoverSetpoint = {0.0f, 0.0f, 0.0f, 0.0f};
-    private float zBase = 0.0f;
-    private float zVelocity = 0.0f;
-    private long zBaseTime = 0L;
-    private LinkedBlockingQueue<QueueEvent> queue = new LinkedBlockingQueue<>();
+		private static final long UPDATE_PERIOD = 200L;
+		private static final int ABS_Z_INDEX = 3;
+		private Crazyflie crazyflie;
+		private float[] hoverSetpoint = {0.0f, 0.0f, 0.0f, 0.0f};
+		private float zBase = 0.0f;
+		private float zVelocity = 0.0f;
+		private long zBaseTime = 0L;
+		private LinkedBlockingQueue<QueueEvent> queue = new LinkedBlockingQueue<>();
 
-    public SetPointThread(Crazyflie crazyflie) {
+		public SetPointThread(Crazyflie crazyflie) {
 			this.crazyflie = crazyflie;
 		}
 
@@ -349,13 +349,13 @@ public class MotionCommander {
 		}
 	}
 
-  class QueueEvent{
+	class QueueEvent{
 
-    private float velocityX = 0.0f;
-    private float velocityY = 0.0f;
-    private float velocityZ = 0.0f;
-    private float rateYaw = 0.0f;
-    private boolean shouldTerminate = false;
+		private float velocityX = 0.0f;
+		private float velocityY = 0.0f;
+		private float velocityZ = 0.0f;
+		private float rateYaw = 0.0f;
+		private boolean shouldTerminate = false;
 
 		public QueueEvent(float velocityX, float velocityY, float velocityZ, float rateYaw) {
 			this.velocityX = velocityX;
@@ -383,5 +383,5 @@ public class MotionCommander {
 		public boolean isShouldTerminate() {
 			return shouldTerminate;
 		}
-  }
+	}
 }
