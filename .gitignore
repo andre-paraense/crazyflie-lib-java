@@ -52,3 +52,6 @@ gradlew.bat
 # Visual Studio Code related
 .vscode/
 /build/
+
+#Exception
+!/libs/*.jar

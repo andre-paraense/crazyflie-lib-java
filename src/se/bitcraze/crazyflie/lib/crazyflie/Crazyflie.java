@@ -262,16 +262,6 @@ public class Crazyflie {
         // => IncomingPacketHandler
     }
 
-    /**
-     * Hack to circumvent BLE reconnect issue
-     */
-    public void startConnectionSetup_BLE() {
-        if (this.mState == State.INITIALIZED) {
-            this.mState = State.CONNECTED;
-            startConnectionSetup();
-        }
-    }
-
     public CrtpDriver getDriver(){
         return mDriver;
     }
@@ -281,13 +271,7 @@ public class Crazyflie {
      * Start the connection setup by refreshing the TOCs
      */
     private void startConnectionSetup() {
-        String connection = "";
-        if (mConnectionData != null) {
-            connection = mConnectionData.toString();
-        } else {
-            connection = "BLE";
-        }
-        mLogger.info("We are connected [{}], requesting connection setup...", connection);
+        mLogger.info("We are connected [{}], requesting connection setup...", mConnectionData.toString());
 
         mParam = new Param(this);
         //must be defined first to be usable in Log TocFetchFinishedListener

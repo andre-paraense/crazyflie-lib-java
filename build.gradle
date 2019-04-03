@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 sourceSets {
    main {
@@ -14,7 +14,7 @@ sourceSets {
    }
 }
 
-sourceCompatibility = 1.11
+sourceCompatibility = 1.8
 version = '1.0'
 
 repositories {
@@ -23,8 +23,5 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.slf4j:slf4j-api:1.8.0-beta4'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.6.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
-    implementation 'javax.usb:usb-api:1.0.2'
+	runtime fileTree('libs') { include '*.jar' }
 }
