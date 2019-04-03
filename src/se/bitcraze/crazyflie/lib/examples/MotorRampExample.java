@@ -80,24 +80,22 @@ public class MotorRampExample {
     public void rampMotors() {
         int thrust_mult = 1;
         int thrust_step = 500;
-        long thrust = 15000;
+        long thrust = 20000;
         float pitch = 0;
         float roll = 0;
         float yawrate = 0;
 
         // send packet with zero thrust to arm the copter
         this.mCrazyflie.sendPacket(new CommanderPacket(0, 0, 0, (char) 0));
-        while (thrust >= 15000) {
-            // self._cf.commander.send_setpoint(roll, pitch, yawrate, thrust)
+        while (thrust >= 20000) {
+        	this.mCrazyflie.sendPacket(new CommanderPacket(roll, pitch, yawrate, (char) thrust));
             System.out.println("sendPacket: " + thrust);
-            this.mCrazyflie.sendPacket(new CommanderPacket(roll, pitch, yawrate, (char) thrust));
-            // time.sleep(0.1)
             try {
-                Thread.sleep(200);
+                Thread.sleep(100L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (thrust >= 20000) {
+            if (thrust >= 25000) {
                 thrust_mult = -1;
             }
             thrust += thrust_step * thrust_mult;
@@ -107,7 +105,7 @@ public class MotorRampExample {
         // since the message queue is not flushed before closing
         // time.sleep(0.1)
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
