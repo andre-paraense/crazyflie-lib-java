@@ -11,7 +11,7 @@ import se.bitcraze.crazyflie.lib.crtp.StopPacket;
 public class MotionCommander {
 
 	private Crazyflie crazyflie;
-	private float velocity = 0.2f;
+	private float velocity = 0.5f;
 	private float height = 0.3f;
 	private float rate = 360.0f/5.0f;
 	private float angle = 360.0f;
@@ -50,7 +50,7 @@ public class MotionCommander {
 
 		isFlying = true;
 
-		resetPositionEstimator();
+//		resetPositionEstimator();
 
 		setPointThread = new SetPointThread(crazyflie);
 		Thread thread = new Thread(setPointThread);
@@ -188,7 +188,7 @@ public class MotionCommander {
 				distanceZ * distanceZ
 				);
 
-		float flightTime = distance / velocity;
+		float flightTime = distance / velocity;		
 
 		float velocityX = velocity * distanceX / distance;
 		float velocityY = velocity * distanceY / distance;
@@ -286,20 +286,20 @@ public class MotionCommander {
 		setPointThread.setVelocitySetpoint(velocityX, velocityY, velocityZ, rateYaw);
 	}
 
-	public void resetPositionEstimator() {
-		crazyflie.getParam().setValue("kalman.resetEstimation", 1);
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		crazyflie.getParam().setValue("kalman.resetEstimation", 0);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void resetPositionEstimator() {
+//		crazyflie.getParam().setValue("kalman.resetEstimation", 1);
+//		try {
+//			Thread.sleep(100);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//		crazyflie.getParam().setValue("kalman.resetEstimation", 0);
+//		try {
+//			Thread.sleep(2000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	private class SetPointThread implements Runnable{
 
@@ -344,7 +344,7 @@ public class MotionCommander {
 						newSetpoint(queueEvent);
 						updateZinSetpoint();
 						crazyflie.sendPacket(new HoverPacket(hoverSetpoint[0], hoverSetpoint[1], hoverSetpoint[2], hoverSetpoint[3]));
-					}
+					}					
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

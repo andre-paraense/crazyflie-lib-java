@@ -85,39 +85,56 @@ public class MotionCommanderExample {
 		
     	MotionCommander motionCommander = new MotionCommander(crazyflie);
     	
+    	System.out.println("Sending take off command");
     	motionCommander.takeOff();
     	sleep(1000L);
     	
+    	System.out.println("Sending forward command");
     	motionCommander.forward(0.8f);
+    	sleep(1000L);
+    	System.out.println("Sending back command");
     	motionCommander.back(0.8f);
     	sleep(1000L);
     	
+    	System.out.println("Sending up command");
     	motionCommander.up(0.5f);
+    	sleep(1000L);
+    	System.out.println("Sending down command");
     	motionCommander.down(0.5f);
     	sleep(1000L);
     	
+    	System.out.println("Sending right command");
     	motionCommander.right(0.5f, 0.8f);
     	sleep(1000L);
+    	System.out.println("Sending left command");
     	motionCommander.left(0.5f, 0.4f);
     	sleep(1000l);
     	
-    	motionCommander.circleRight(0.5f, 0.5f, 180);
+//    	System.out.println("Sending circle right command");
+//    	motionCommander.circleRight(0.5f, 0.5f, 180);
+//    	sleep(1000L);
     	
+    	System.out.println("Sending turn left command");
     	motionCommander.turnLeft(90);
     	sleep(1000l);
     	
+    	System.out.println("Move distance command");
     	motionCommander.moveDistance(-1.0f, 0.0f, 0.5f, 0.6f);
     	sleep(1000l);
     	
-    	motionCommander.startLeft(0.5f);
-    	
-    	for(int i=0; i < 5; i++) {
-    		System.out.println("Doing other work");
-    		sleep(200L);
-    	}
-    	
+//    	System.out.println("Sending start left command");
+//    	motionCommander.startLeft(0.5f);
+//    	
+//    	for(int i=0; i < 5; i++) {
+//    		System.out.println("Doing other work");
+//    		sleep(200L);
+//    	}
+//    	
+    	System.out.println("Sending stop command");
     	motionCommander.stop();
+    	sleep(1000l);
     	
+    	System.out.println("Sending land command");
     	motionCommander.land();
     	
 	}
