@@ -77,25 +77,49 @@ public class MotionCommander {
 			isFlying = false;
 		}
 	}
+	
+	public void down(float height) throws Exception {
+		down(height, velocity);
+	}
 
 	public void down(float height, float velocity) throws Exception {
 		moveDistance(0.0f, 0.0f, -height, velocity);
+	}
+	
+	public void up(float height) throws Exception {
+		up(height, velocity);
 	}
 
 	public void up(float height, float velocity) throws Exception {
 		moveDistance(0.0f, 0.0f, height, velocity);
 	}
+	
+	public void left(float distance) throws Exception {
+		left(distance, velocity);
+	}
 
 	public void left(float distance, float velocity) throws Exception {
 		moveDistance(0.0f, distance, 0.0f, velocity);
+	}
+	
+	public void right(float distance) throws Exception {
+		right(distance, velocity);
 	}
 
 	public void right(float distance, float velocity) throws Exception {
 		moveDistance(0.0f, -distance, 0.0f, velocity);
 	}
+	
+	public void forward(float distance) throws Exception {
+		forward(distance, velocity);
+	}
 
 	public void forward(float distance, float velocity) throws Exception {
 		moveDistance(distance, 0.0f, 0.0f, velocity);
+	}
+	
+	public void back(float distance) throws Exception {
+		back(distance, velocity);
 	}
 
 	public void back(float distance, float velocity) throws Exception {
