@@ -175,7 +175,7 @@ public class MotionCommander {
 
 		startCircleRight(radius, velocity);
 		try {
-			Thread.sleep((long) (flightTime*1000));
+			Thread.sleep((long) (flightTime*1000L));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
