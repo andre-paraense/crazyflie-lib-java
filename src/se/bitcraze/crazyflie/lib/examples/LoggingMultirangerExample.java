@@ -24,7 +24,7 @@ import se.bitcraze.crazyflie.lib.usb.UsbLinkJava;
  * and prints it to the console. After 10s the application disconnects and exits.
  *
  */
-public class LoggingOAExample extends ConnectionAdapter{
+public class LoggingMultirangerExample extends ConnectionAdapter{
 
     //# Only output errors from the logging framework
     //logging.basicConfig(level=logging.ERROR)
@@ -38,7 +38,7 @@ public class LoggingOAExample extends ConnectionAdapter{
      *
      * @param connectionData
      */
-    public LoggingOAExample(ConnectionData connectionData) {
+    public LoggingMultirangerExample(ConnectionData connectionData) {
         // Create a Crazyflie object without specifying any cache dirs
         mCrazyflie = new Crazyflie(new RadioDriver(new UsbLinkJava()));
         //TODO: do not use cache
@@ -220,7 +220,7 @@ public class LoggingOAExample extends ConnectionAdapter{
         foundCrazyflies.add(new ConnectionData(80, Crazyradio.DR_2MPS));
 
         if (foundCrazyflies.size() > 0) {
-            LoggingOAExample loggingExample = new LoggingOAExample(foundCrazyflies.get(0));
+            LoggingMultirangerExample loggingExample = new LoggingMultirangerExample(foundCrazyflies.get(0));
 
             /**
              * The Crazyflie lib doesn't contain anything to keep the application alive,
