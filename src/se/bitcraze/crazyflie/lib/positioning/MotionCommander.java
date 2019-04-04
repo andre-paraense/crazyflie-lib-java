@@ -193,6 +193,8 @@ public class MotionCommander {
 		float velocityX = velocity * distanceX / distance;
 		float velocityY = velocity * distanceY / distance;
 		float velocityZ = velocity * distanceZ / distance;
+		
+		System.out.println("startLinearMotion - velocityX: "+velocityX+" velocityY: "+velocityY+" velocityZ: "+velocityZ);
 
 		startLinearMotion(velocityX, velocityY, velocityZ);
 		try {

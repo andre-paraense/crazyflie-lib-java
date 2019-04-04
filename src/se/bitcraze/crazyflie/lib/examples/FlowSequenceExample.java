@@ -124,6 +124,16 @@ public class FlowSequenceExample {
             this.mCrazyflie.sendPacket(new HoverPacket(0, 0, 0, mHeight));
             Thread.sleep(100);
         }
+        
+        for (float y = 0; y < 20; y++) {
+            this.mCrazyflie.sendPacket(new HoverPacket(mSpeed, mSpeed, 0, mHeight*2));
+            Thread.sleep(100);
+        }
+        
+        for (float y = 0; y < 20; y++) {
+            this.mCrazyflie.sendPacket(new HoverPacket(-mSpeed, -mSpeed, 0, mHeight));
+            Thread.sleep(100);
+        }
 
         // descend
         for (float y = mHeight; y > 0; y -= (float) mHeight/10) {

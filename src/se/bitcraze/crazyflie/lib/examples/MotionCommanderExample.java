@@ -110,9 +110,9 @@ public class MotionCommanderExample {
     	motionCommander.left(0.5f, 0.4f);
     	sleep(1000l);
     	
-//    	System.out.println("Sending circle right command");
-//    	motionCommander.circleRight(0.5f, 0.5f, 180);
-//    	sleep(1000L);
+    	System.out.println("Sending circle right command");
+    	motionCommander.circleRight(0.5f, 0.5f, 180);
+    	sleep(1000L);
     	
     	System.out.println("Sending turn left command");
     	motionCommander.turnLeft(90);
@@ -122,14 +122,14 @@ public class MotionCommanderExample {
     	motionCommander.moveDistance(-1.0f, 0.0f, 0.5f, 0.6f);
     	sleep(1000l);
     	
-//    	System.out.println("Sending start left command");
-//    	motionCommander.startLeft(0.5f);
-//    	
-//    	for(int i=0; i < 5; i++) {
-//    		System.out.println("Doing other work");
-//    		sleep(200L);
-//    	}
-//    	
+    	System.out.println("Sending start left command");
+    	motionCommander.startLeft(0.5f);
+    	
+    	for(int i=0; i < 5; i++) {
+    		System.out.println("Doing other work");
+    		sleep(200L);
+    	}
+    	
     	System.out.println("Sending stop command");
     	motionCommander.stop();
     	sleep(1000l);
