@@ -24,7 +24,7 @@ import se.bitcraze.crazyflie.lib.usb.UsbLinkJava;
  * and prints it to the console. After 10s the application disconnects and exits.
  *
  */
-public class LoggingMultirangerExample extends ConnectionAdapter{
+public class LoggingSensorsExample extends ConnectionAdapter{
 
     //# Only output errors from the logging framework
     //logging.basicConfig(level=logging.ERROR)
@@ -38,7 +38,7 @@ public class LoggingMultirangerExample extends ConnectionAdapter{
      *
      * @param connectionData
      */
-    public LoggingMultirangerExample(ConnectionData connectionData) {
+    public LoggingSensorsExample(ConnectionData connectionData) {
         // Create a Crazyflie object without specifying any cache dirs
         mCrazyflie = new Crazyflie(new RadioDriver(new UsbLinkJava()));
         //TODO: do not use cache
@@ -72,13 +72,22 @@ public class LoggingMultirangerExample extends ConnectionAdapter{
         System.out.println("Setup finished");
 
         // The definition of the logconfig can be made before the setup is finished
-        final LogConfig lcOA = new LogConfig("multiranger", 500);
-        lcOA.addVariable("range.front", VariableType.FLOAT);
-        lcOA.addVariable("range.back", VariableType.FLOAT);
-        lcOA.addVariable("range.left", VariableType.FLOAT);
-        lcOA.addVariable("range.right", VariableType.FLOAT);
-        lcOA.addVariable("range.up", VariableType.FLOAT);
-        lcOA.addVariable("range.zrange", VariableType.FLOAT);
+        final LogConfig lc = new LogConfig("sensors", 500);
+        lc.addVariable("range.front", VariableType.FLOAT);
+        lc.addVariable("range.back", VariableType.FLOAT);
+        lc.addVariable("range.left", VariableType.FLOAT);
+        lc.addVariable("range.right", VariableType.FLOAT);
+        lc.addVariable("range.up", VariableType.FLOAT);
+        lc.addVariable("range.zrange", VariableType.FLOAT);
+        lc.addVariable("stabilizer.roll", VariableType.FLOAT);
+        lc.addVariable("stabilizer.pitch", VariableType.FLOAT);
+        lc.addVariable("stabilizer.yaw", VariableType.FLOAT);
+        lc.addVariable("stabilizer.thrust", VariableType.FLOAT);
+        lc.addVariable("stateEstimate.x", VariableType.FLOAT);
+        lc.addVariable("stateEstimate.y", VariableType.FLOAT);
+        lc.addVariable("stateEstimate.z", VariableType.FLOAT);
+        lc.addVariable("pm.state", VariableType.INT16_T);// [BATTERY, CHARGING, CHARGED, LOW_POWER] = list(range(4))
+        lc.addVariable("pm.vbat", VariableType.FLOAT);//value in volts
 
         /**
          *  Adding the configuration cannot be done until a Crazyflie is connected and
@@ -90,7 +99,7 @@ public class LoggingMultirangerExample extends ConnectionAdapter{
 
         if (logg != null) {
             //self._cf.log.add_config(self._lg_stab)
-            logg.addConfig(lcOA);
+            logg.addConfig(lc);
 
             /*
             # This callback will receive the data
@@ -136,7 +145,7 @@ public class LoggingMultirangerExample extends ConnectionAdapter{
             });
 
             // Start the logging
-            logg.start(lcOA);
+            logg.start(lc);
 
             /*
             try:
@@ -154,8 +163,8 @@ public class LoggingMultirangerExample extends ConnectionAdapter{
 
                 @Override
                 public void run() {
-                    logg.stop(lcOA);
-                    logg.delete(lcOA);
+                    logg.stop(lc);
+                    logg.delete(lc);
                 }
 
             }, 5000);
@@ -220,7 +229,7 @@ public class LoggingMultirangerExample extends ConnectionAdapter{
         foundCrazyflies.add(new ConnectionData(80, Crazyradio.DR_2MPS));
 
         if (foundCrazyflies.size() > 0) {
-            LoggingMultirangerExample loggingExample = new LoggingMultirangerExample(foundCrazyflies.get(0));
+            LoggingSensorsExample loggingExample = new LoggingSensorsExample(foundCrazyflies.get(0));
 
             /**
              * The Crazyflie lib doesn't contain anything to keep the application alive,
