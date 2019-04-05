@@ -72,22 +72,24 @@ public class LoggingSensorsExample extends ConnectionAdapter{
         System.out.println("Setup finished");
 
         // The definition of the logconfig can be made before the setup is finished
-        final LogConfig lc = new LogConfig("sensors", 500);
-        lc.addVariable("range.front", VariableType.FLOAT);
-        lc.addVariable("range.back", VariableType.FLOAT);
-        lc.addVariable("range.left", VariableType.FLOAT);
-        lc.addVariable("range.right", VariableType.FLOAT);
-        lc.addVariable("range.up", VariableType.FLOAT);
-        lc.addVariable("range.zrange", VariableType.FLOAT);
-        lc.addVariable("stabilizer.roll", VariableType.FLOAT);
-        lc.addVariable("stabilizer.pitch", VariableType.FLOAT);
-        lc.addVariable("stabilizer.yaw", VariableType.FLOAT);
-        lc.addVariable("stabilizer.thrust", VariableType.FLOAT);
-        lc.addVariable("stateEstimate.x", VariableType.FLOAT);
-        lc.addVariable("stateEstimate.y", VariableType.FLOAT);
-        lc.addVariable("stateEstimate.z", VariableType.FLOAT);
+        final LogConfig lc = new LogConfig("battery", 100);
         lc.addVariable("pm.state", VariableType.INT16_T);// [BATTERY, CHARGING, CHARGED, LOW_POWER] = list(range(4))
         lc.addVariable("pm.vbat", VariableType.FLOAT);//value in volts
+        
+        final LogConfig lc2 = new LogConfig("sensors", 100);
+        lc2.addVariable("range.front", VariableType.FLOAT);
+        lc2.addVariable("range.back", VariableType.FLOAT);
+        lc2.addVariable("range.left", VariableType.FLOAT);
+        lc2.addVariable("range.right", VariableType.FLOAT);
+        lc2.addVariable("range.up", VariableType.FLOAT);
+        lc2.addVariable("range.zrange", VariableType.FLOAT);
+//        lc2.addVariable("stabilizer.roll", VariableType.FLOAT);
+//        lc2.addVariable("stabilizer.pitch", VariableType.FLOAT);
+//        lc2.addVariable("stabilizer.yaw", VariableType.FLOAT);
+//        lc2.addVariable("stabilizer.thrust", VariableType.FLOAT);
+//        lc2.addVariable("stateEstimate.x", VariableType.FLOAT);
+//        lc2.addVariable("stateEstimate.y", VariableType.FLOAT);
+//        lc2.addVariable("stateEstimate.z", VariableType.FLOAT);
 
         /**
          *  Adding the configuration cannot be done until a Crazyflie is connected and
@@ -98,86 +100,124 @@ public class LoggingSensorsExample extends ConnectionAdapter{
         final Logg logg = this.mCrazyflie.getLogg();
 
         if (logg != null) {
-            //self._cf.log.add_config(self._lg_stab)
-            logg.addConfig(lc);
 
-            /*
-            # This callback will receive the data
-            self._lg_stab.data_received_cb.add_callback(self._stab_log_data)
-            # This callback will be called on errors
-            self._lg_stab.error_cb.add_callback(self._stab_log_error)
-            */
+        	logg.addConfig(lc); 
 
             logg.addLogListener(new LogListener() {
 
                 public void logConfigAdded(LogConfig logConfig) {
-                    String msg = "";
-                    if(logConfig.isAdded()) {
-                        msg = "' added";
-                    } else {
-                        msg = "' deleted";
-                    }
-                    System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	if(logConfig.getName().equalsIgnoreCase(lc.getName())){
+                        String msg = "";
+                        if(logConfig.isAdded()) {
+                            msg = "' added";
+                        } else {
+                            msg = "' deleted";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
                 }
 
                 public void logConfigError(LogConfig logConfig) {
-                    System.err.println("Error when logging '" + logConfig.getName() + "': " + logConfig.getErrNo());
+                	if(logConfig.getName().equalsIgnoreCase(lc.getName())){
+                		System.err.println("Error when logging '" + logConfig.getName() + "': " + logConfig.getErrNo());
+                	}                   
                 }
 
                 public void logConfigStarted(LogConfig logConfig) {
-                    String msg = "";
-                    if(logConfig.isStarted()) {
-                        msg = "' started";
-                    } else {
-                        msg = "' stopped";
-                    }
-                    System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	if(logConfig.getName().equalsIgnoreCase(lc.getName())){
+                        String msg = "";
+                        if(logConfig.isStarted()) {
+                            msg = "' started";
+                        } else {
+                            msg = "' stopped";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
                 }
 
                 public void logDataReceived(LogConfig logConfig, Map<String, Number> data, int timestamp) {
-                    System.out.println("timestamp: " + timestamp);
-                    for (Entry<String, Number> entry : data.entrySet()) {
-                        System.out.print("\t" + entry.getKey() + ": " + entry.getValue());
-                    }
-                    System.out.println();
+                	if(logConfig.getName().equalsIgnoreCase(lc.getName())){
+                        System.out.println("timestamp: " + timestamp);
+                        for (Entry<String, Number> entry : data.entrySet()) {
+                            System.out.print("\t" + entry.getKey() + ": " + entry.getValue());
+                        }
+                        System.out.println();
+                	}
                 }
 
             });
 
-            // Start the logging
             logg.start(lc);
 
-            /*
-            try:
-                [...]
-            except KeyError as e:
-                print "Could not start log configuration," \
-                      "{} not found in TOC".format(str(e))
-            except AttributeError:
-                print "Could not add Stabilizer log config, bad configuration."
-             */
+            logg.addConfig(lc2); 
+            
+            logg.addLogListener(new LogListener() {
 
-            // Start a timer to disconnect after 5s
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-
-                @Override
-                public void run() {
-                    logg.stop(lc);
-                    logg.delete(lc);
+                public void logConfigAdded(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc2.getName())){
+                        String msg = "";
+                        if(logConfig.isAdded()) {
+                            msg = "' added";
+                        } else {
+                            msg = "' deleted";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
                 }
 
-            }, 5000);
+                public void logConfigError(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc2.getName())){
+                		System.err.println("Error when logging '" + logConfig.getName() + "': " + logConfig.getErrNo());
+                	}                   
+                }
+
+                public void logConfigStarted(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc2.getName())){
+                        String msg = "";
+                        if(logConfig.isStarted()) {
+                            msg = "' started";
+                        } else {
+                            msg = "' stopped";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
+                }
+
+                public void logDataReceived(LogConfig logConfig, Map<String, Number> data, int timestamp) {
+                	if(logConfig.getName().equalsIgnoreCase(lc2.getName())){
+                        System.out.println("timestamp: " + timestamp);
+                        for (Entry<String, Number> entry : data.entrySet()) {
+                            System.out.print("\t" + entry.getKey() + ": " + entry.getValue());
+                        }
+                        System.out.println();
+                	}
+                }
+
+            });
+
+            logg.start(lc2);
+            
+            // Start a timer to disconnect after 5s
+//            Timer timer = new Timer();
+//            timer.schedule(new TimerTask() {
+//
+//                @Override
+//                public void run() {
+//                    logg.stop(lc);
+//                    logg.delete(lc);
+//                }
+//
+//            }, 5000);
 
             // Start a timer to disconnect after 10s
-            timer.schedule(new TimerTask() {
-
-                @Override
-                public void run() {
-                    mCrazyflie.disconnect();
-                }
-
-            }, 10000);
+//            timer.schedule(new TimerTask() {
+//
+//                @Override
+//                public void run() {
+//                    mCrazyflie.disconnect();
+//                }
+//
+//            }, 10000);
         } else {
             System.err.println("Logg was null!!");
         }
