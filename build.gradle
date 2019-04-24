@@ -15,13 +15,13 @@ sourceSets {
 }
 
 sourceCompatibility = 1.8
-version = '1.0'
+targetCompatibility = 1.8
+version = '0.0.2'
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-	runtime fileTree('libs') { include '*.jar' }
+	implementation fileTree('libs') { include '*.jar' }
 }
