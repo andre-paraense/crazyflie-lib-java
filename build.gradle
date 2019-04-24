@@ -14,8 +14,8 @@ sourceSets {
    }
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 version = '0.0.2'
 
 repositories {
