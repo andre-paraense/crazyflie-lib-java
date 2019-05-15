@@ -14,14 +14,25 @@ sourceSets {
    }
 }
 
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
-version = '0.0.2'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = '0.0.3'
 
 repositories {
     mavenCentral()
 }
 
+configurations {
+    extraLibs
+}
+
 dependencies {
-	implementation fileTree('libs') { include '*.jar' }
+	extraLibs fileTree('libs') { include '*.jar' }
+	configurations.implementation.extendsFrom(configurations.extraLibs)
+}
+
+jar {
+    from {
+    	configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
