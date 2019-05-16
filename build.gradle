@@ -25,30 +25,36 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    extraLibs
+}
+
 dependencies {
+    extraLibs fileTree(dir: 'libs', include: ['*.jar'])
+    configurations.implementation.extendsFrom(configurations.extraLibs)
 
 	implementation 'org.slf4j:slf4j-api:1.7.5'
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 	implementation 'org.apache.commons:commons-lang3:3.9'
-	implementation 'org.usb4java:libusb4java:1.2.0'
-	implementation 'org.usb4java:usb4java-javax:1.2.0'
 	
 	testImplementation group: 'junit', name: 'junit', version: '4.9'
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
+jar {
+    from {
+    	configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
+
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 artifacts
 {
-    archives javadocJar, sourcesJar
+    archives sourcesJar
 }
 
 jacocoTestReport {
