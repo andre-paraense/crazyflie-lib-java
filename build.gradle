@@ -38,6 +38,19 @@ dependencies {
 	testImplementation group: 'junit', name: 'junit', version: '4.9'
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts
+{
+    archives javadocJar, sourcesJar
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
