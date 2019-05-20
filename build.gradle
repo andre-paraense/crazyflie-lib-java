@@ -1,7 +1,10 @@
 plugins {
 	id 'java-library-distribution'
   	id 'jacoco'
+  	id 'maven'
 }
+
+group = 'com.github.andre-paraense'
 
 sourceSets {
    main {
