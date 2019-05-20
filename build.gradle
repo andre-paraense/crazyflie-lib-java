@@ -1,7 +1,10 @@
 plugins {
 	id 'java-library-distribution'
   	id 'jacoco'
+  	id 'maven'
 }
+
+group = 'com.github.andre-paraense'
 
 sourceSets {
    main {
@@ -30,8 +33,14 @@ configurations {
 }
 
 dependencies {
-	extraLibs fileTree('libs') { include '*.jar' }
-	configurations.implementation.extendsFrom(configurations.extraLibs)
+    extraLibs fileTree(dir: 'libs', include: ['*.jar'])
+    configurations.implementation.extendsFrom(configurations.extraLibs)
+
+	implementation 'org.slf4j:slf4j-api:1.7.5'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+	implementation 'org.apache.commons:commons-lang3:3.9'
 	
 	testImplementation group: 'junit', name: 'junit', version: '4.9'
 }
@@ -40,6 +49,15 @@ jar {
     from {
     	configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts
+{
+    archives sourcesJar
 }
 
 jacocoTestReport {
