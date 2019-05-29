@@ -156,7 +156,7 @@ public class Param {
      * Callback with data for an updated parameter
      */
     public void paramUpdated(CrtpPacket packet) {
-        int varId = packet.getPayload()[0];
+    	 int varId = packet.getPayload()[0] & 0x00ff;
         TocElement tocElement = mToc.getElementById(varId);
         if (tocElement != null) {
             //s = struct.unpack(element.pytype, pk.data[1:])[0]

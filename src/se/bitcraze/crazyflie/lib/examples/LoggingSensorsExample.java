@@ -76,20 +76,24 @@ public class LoggingSensorsExample extends ConnectionAdapter{
         lc.addVariable("pm.state", VariableType.INT16_T);// [BATTERY, CHARGING, CHARGED, LOW_POWER] = list(range(4))
         lc.addVariable("pm.vbat", VariableType.FLOAT);//value in volts
         
-        final LogConfig lc2 = new LogConfig("sensors", 100);
+        final LogConfig lc2 = new LogConfig("multiranger", 100);
         lc2.addVariable("range.front", VariableType.FLOAT);
         lc2.addVariable("range.back", VariableType.FLOAT);
         lc2.addVariable("range.left", VariableType.FLOAT);
         lc2.addVariable("range.right", VariableType.FLOAT);
         lc2.addVariable("range.up", VariableType.FLOAT);
         lc2.addVariable("range.zrange", VariableType.FLOAT);
-//        lc2.addVariable("stabilizer.roll", VariableType.FLOAT);
-//        lc2.addVariable("stabilizer.pitch", VariableType.FLOAT);
-//        lc2.addVariable("stabilizer.yaw", VariableType.FLOAT);
-//        lc2.addVariable("stabilizer.thrust", VariableType.FLOAT);
-//        lc2.addVariable("stateEstimate.x", VariableType.FLOAT);
-//        lc2.addVariable("stateEstimate.y", VariableType.FLOAT);
-//        lc2.addVariable("stateEstimate.z", VariableType.FLOAT);
+        
+        final LogConfig lc3 = new LogConfig("stabilizer", 100);
+        lc3.addVariable("stabilizer.roll", VariableType.FLOAT);
+        lc3.addVariable("stabilizer.pitch", VariableType.FLOAT);
+        lc3.addVariable("stabilizer.yaw", VariableType.FLOAT);
+        lc3.addVariable("stabilizer.thrust", VariableType.FLOAT);
+        
+        final LogConfig lc4 = new LogConfig("stateEstimate", 100);
+        lc4.addVariable("stateEstimate.x", VariableType.FLOAT);
+        lc4.addVariable("stateEstimate.y", VariableType.FLOAT);
+        lc4.addVariable("stateEstimate.z", VariableType.FLOAT);
 
         /**
          *  Adding the configuration cannot be done until a Crazyflie is connected and
@@ -196,6 +200,103 @@ public class LoggingSensorsExample extends ConnectionAdapter{
             });
 
             logg.start(lc2);
+            
+            
+            logg.addConfig(lc3); 
+            
+            logg.addLogListener(new LogListener() {
+
+                public void logConfigAdded(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc3.getName())){
+                        String msg = "";
+                        if(logConfig.isAdded()) {
+                            msg = "' added";
+                        } else {
+                            msg = "' deleted";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
+                }
+
+                public void logConfigError(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc3.getName())){
+                		System.err.println("Error when logging '" + logConfig.getName() + "': " + logConfig.getErrNo());
+                	}                   
+                }
+
+                public void logConfigStarted(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc3.getName())){
+                        String msg = "";
+                        if(logConfig.isStarted()) {
+                            msg = "' started";
+                        } else {
+                            msg = "' stopped";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
+                }
+
+                public void logDataReceived(LogConfig logConfig, Map<String, Number> data, int timestamp) {
+                	if(logConfig.getName().equalsIgnoreCase(lc3.getName())){
+                        System.out.println("timestamp: " + timestamp);
+                        for (Entry<String, Number> entry : data.entrySet()) {
+                            System.out.print("\t" + entry.getKey() + ": " + entry.getValue());
+                        }
+                        System.out.println();
+                	}
+                }
+
+            });
+
+            logg.start(lc3);
+            
+            logg.addConfig(lc4); 
+            
+            logg.addLogListener(new LogListener() {
+
+                public void logConfigAdded(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc4.getName())){
+                        String msg = "";
+                        if(logConfig.isAdded()) {
+                            msg = "' added";
+                        } else {
+                            msg = "' deleted";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
+                }
+
+                public void logConfigError(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc4.getName())){
+                		System.err.println("Error when logging '" + logConfig.getName() + "': " + logConfig.getErrNo());
+                	}                   
+                }
+
+                public void logConfigStarted(LogConfig logConfig) {
+                	if(logConfig.getName().equalsIgnoreCase(lc4.getName())){
+                        String msg = "";
+                        if(logConfig.isStarted()) {
+                            msg = "' started";
+                        } else {
+                            msg = "' stopped";
+                        }
+                        System.out.println("LogConfig '" + logConfig.getName() + msg);
+                	}
+                }
+
+                public void logDataReceived(LogConfig logConfig, Map<String, Number> data, int timestamp) {
+                	if(logConfig.getName().equalsIgnoreCase(lc4.getName())){
+                        System.out.println("timestamp: " + timestamp);
+                        for (Entry<String, Number> entry : data.entrySet()) {
+                            System.out.print("\t" + entry.getKey() + ": " + entry.getValue());
+                        }
+                        System.out.println();
+                	}
+                }
+
+            });
+
+            logg.start(lc4);
             
             // Start a timer to disconnect after 5s
 //            Timer timer = new Timer();
