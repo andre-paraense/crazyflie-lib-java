@@ -394,7 +394,7 @@ public class Logg {
         System.arraycopy(payload, offset, logData, 0, logData.length);
 
         logDataMap.putAll(logConfig.unpackLogData(logData));
-        LoggerFactory.getLogger("Logging").debug("Unpacked log data (ID: " + logConfig.getId() + ") with time stamp " + timestamp);
+//        LoggerFactory.getLogger("Logging").debug("Unpacked log data (ID: " + logConfig.getId() + ") with time stamp " + timestamp);
         //TODO: what to do with the unpacked data?
         return timestamp;
     }
