@@ -379,9 +379,9 @@ public class Logg {
                 Map<String, Number> logDataMap = new HashMap<String, Number>();
                 int timestamp = parseLogData(payload, logConfig, logDataMap);
                 notifyLogDataReceived(logConfig, logDataMap, timestamp);
-            } else {
-                mLogger.warn("Error no LogEntry to handle id=" + id);
-            }
+            } // else {
+//                mLogger.warn("Error no LogEntry to handle id=" + id);
+//            }
         }
     }
 
@@ -394,7 +394,7 @@ public class Logg {
         System.arraycopy(payload, offset, logData, 0, logData.length);
 
         logDataMap.putAll(logConfig.unpackLogData(logData));
-        LoggerFactory.getLogger("Logging").debug("Unpacked log data (ID: " + logConfig.getId() + ") with time stamp " + timestamp);
+//        LoggerFactory.getLogger("Logging").debug("Unpacked log data (ID: " + logConfig.getId() + ") with time stamp " + timestamp);
         //TODO: what to do with the unpacked data?
         return timestamp;
     }
