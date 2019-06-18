@@ -379,9 +379,9 @@ public class Logg {
                 Map<String, Number> logDataMap = new HashMap<String, Number>();
                 int timestamp = parseLogData(payload, logConfig, logDataMap);
                 notifyLogDataReceived(logConfig, logDataMap, timestamp);
-            } else {
-                mLogger.warn("Error no LogEntry to handle id=" + id);
-            }
+            } // else {
+//                mLogger.warn("Error no LogEntry to handle id=" + id);
+//            }
         }
     }
 
