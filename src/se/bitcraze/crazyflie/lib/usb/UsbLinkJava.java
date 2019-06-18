@@ -162,7 +162,7 @@ public class UsbLinkJava implements CrazyUsbInterface {
                 usbControlIrp.setData(data);
                 int dataLength = (data == null) ? 0 : data.length;
                 usbControlIrp.setLength(dataLength);
-                debugControlTransfer((byte) requestType, (byte) request, (byte) value, (byte) index, data);
+
                 if(sendUsbControlIrp(mUsbDevice, usbControlIrp)){
                     returnCode = usbControlIrp.getActualLength();
                 }
@@ -173,10 +173,6 @@ public class UsbLinkJava implements CrazyUsbInterface {
             }
         }
         return returnCode;
-    }
-
-    private void debugControlTransfer(byte requestType, byte request, byte value, byte index, byte[] data) {
-        mLogger.debug("sendControlTransfer, requestType: {}, request: {}, value: {}, index: {}, data: {}", Utilities.getHexString(requestType), Utilities.getHexString(request), Utilities.getHexString(value), Utilities.getHexString(index), Utilities.getHexString(data));
     }
 
     /* (non-Javadoc)
@@ -268,7 +264,6 @@ public class UsbLinkJava implements CrazyUsbInterface {
            ("IN".equalsIgnoreCase(direction) && Utilities.getHexString(data).startsWith("01 00 00")))) {
            return;
         }
-        mLogger.debug("sendBulkTransfer - direction: {}, byteString: {}", direction, Utilities.getHexString(data));
     }
 
     /**
