@@ -1,6 +1,6 @@
 # crazyflie-lib-java
 
-Crazyflie Java Lib based on the [Bitcraze Android client](https://github.com/bitcraze/crazyflie-android-client), but purely using Java code and in the form of a Gradle Project, easy to be used or customized.
+Crazyflie Java Lib based on the [Bitcraze Android client](https://github.com/bitcraze/crazyflie-android-client), but in the form of a Gradle Project, easy to be used or customized.
 
 ## Installation
 
@@ -20,7 +20,7 @@ Crazyflie Java Lib based on the [Bitcraze Android client](https://github.com/bit
 ```
 	dependencies {
             ...
-            implementation 'com.github.andre-paraense:crazyflie-lib-java:0.1.0'
+            implementation 'com.github.andre-paraense:crazyflie-lib-java:0.1.1'
 	}
 ```
 
@@ -43,7 +43,7 @@ Crazyflie Java Lib based on the [Bitcraze Android client](https://github.com/bit
 	<dependency>
 	    <groupId>com.github.andre-paraense</groupId>
 	    <artifactId>crazyflie-lib-java</artifactId>
-	    <version>0.1.0</version>
+	    <version>0.1.1</version>
 	</dependency>
 ```
 
